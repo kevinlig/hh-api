@@ -87,7 +87,7 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     if (!$fp)
         exit("Failed to connect: $err $errstr" . PHP_EOL);
 
-    echo 'Connected to APNS' . PHP_EOL;
+    
 
     // Create the payload body
     $body['aps'] = array(
@@ -108,7 +108,8 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     if (!$result)
         echo 'Message not delivered' . PHP_EOL;
     else
-        echo 'Message successfully delivered' . PHP_EOL;
+        $app->response->headers->set('Content-Type', 'application/json'); 
+        echo json_encode(array("status"=>"success"));
 
     // Close the connection to the server
     fclose($fp);
