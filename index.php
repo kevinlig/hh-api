@@ -150,24 +150,11 @@ $app->get('/statuses', function () use ($app, $db) {
 
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         
-        $sql = "SELECT s.patient_id, s.post_time, b.beacon_id, b.description, b.name FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :patient ORDER BY s.post_time DESC LIMIT 2";
+        $sql = "SELECT s.patient_id, b.beacon_id, b.description, b.name FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :patient ORDER BY s.id DESC LIMIT 1";
         $query = $db->prepare($sql);
         $query->execute(array(":patient"=>$row['patient_id']));
 
-
-        $lastTime = 0;
-        $lastBeacon = "";
-        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $result = $row;
-            if ($lastTime == 0) {
-                $lastTime = $row['post_time'];
-            }
-            else {
-                if ($lastTime == $row['post_time']) {
-                    $result['beacon_id'] = "329976E3-2576-4D4D-8BF8-01B78FD49A92";
-                }
-            }
-        }
+        $result = $query->fetch(PDO::FETCH_ASSOC);
         array_push($response,$result);
     }
 
