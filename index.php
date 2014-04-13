@@ -36,8 +36,10 @@ $app->post('/status', function () use ($app, $db) {
 
 $app->get('/statuses', function () use ($app, $db) {
 
-    $app->response->headers->set('Access-Control-Allow-Origin', "*");
-    $app->response->headers->set('Access-Control-Allow-Methods', "*");
+    $app->response->headers->set('Access-Control-Allow-Origin: *');
+        $app->response->headers->set('Access-Control-Allow-Headers: *');
+
+    $app->response->headers->set('Access-Control-Allow-Methods: *');
 
     $sql = "SELECT * FROM status";
     $statement = $db->prepare($sql);
