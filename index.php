@@ -105,11 +105,13 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     // Send it to the server
     $result = fwrite($fp, $msg, strlen($msg));
 
-    if (!$result)
+    if (!$result) {
         echo 'Message not delivered' . PHP_EOL;
-    else
+    }
+    else {
         $app->response->headers->set('Content-Type', 'application/json'); 
         echo json_encode(array("status"=>"success"));
+    }
 
     // Close the connection to the server
     fclose($fp);
