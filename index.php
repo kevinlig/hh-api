@@ -34,6 +34,23 @@ $app->post('/status', function () use ($app, $db) {
 
 });
 
+$app->get('/statuses', function () use ($app, $db) {
+
+    $app->response->headers->set('Access-Control-Allow-Origin', "*");
+    $app->response->headers->set('Access-Control-Allow-Methods', "*");
+
+    $sql = "SELECT * FROM status";
+    $statement = $db->prepare($sql);
+    $statement->execute();
+
+    $response = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    
+
+    echo json_encode($response);
+
+});
+
 $app->run();
 
 ?>
