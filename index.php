@@ -57,6 +57,13 @@ $app->get('/statuses', function () use ($app, $db) {
 });
 
 $app->get('/emergency/:user', function($user) use ($app, $db) {
+    // get device token
+    $sql = "SELECT deviceToken FROM sessions WHERE patient = :user LIMIT 1";
+    $query = $db->prepare($sql);
+    $query->execute(array(":user"=>$user));
+
+    $results = $query->fetch(PDO::FETCH_ASSOC);
+
     // Put your device token here (without spaces):
     $deviceToken = 'ff12c28e30e013641b26847ae81dae500fbda61633f59fc3dba5b85029c37b87';
 
@@ -64,7 +71,7 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     $passphrase = "DeathPanelP@ss";
 
     // Put your alert message here:
-    $message = 'This is a test';
+    $message = 'URGENT: The care provider needs your immediate attention.';
 
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -85,7 +92,8 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     // Create the payload body
     $body['aps'] = array(
         'alert' => $message,
-        'sound' => 'default'
+        'sound' => 'emergency.aif',
+        'meta-urgent' => 'true'
         );
 
     // Encode the payload as JSON
