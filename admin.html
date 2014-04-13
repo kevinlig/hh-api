@@ -37,28 +37,35 @@
         
     </nav>
 	<div class="container">
-		 <table class="table table-hover table-striped tablesorter">
-                <thead>
-                  <tr>
-                    <th><i class="fa fa-user"></i> Patient </th>
-                  
-                    <th>Last State </th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="status in statuses">
-                    <td>{{status.patient_id}}</td>
-                    <td>{{status.beacon_id}}</td>
-                    <td>{{status.post_time}}</td>
+		<div id="page-wrapper">
+			<div class="row">
+			 	<table class="table table-bordered table-hover table-striped tablesorter">
+	                <thead>
+	                  <tr>
+	                    <th>Patient </th>
+	                  
+	                    <th>Last State </th>
+	                    <th>Time</th>
+	                  </tr>
+	                </thead>
+	                <tbody>
 
-                  </tr>
-                 
-                </tbody>
+	     
+	                  <tr ng-repeat="status in initialList" ng-click="openDetails(status.patient_id)">
+	                    <td>{{status.patient_id}}</td>
+	                    <td>{{status.beacon_id}}</td>
+	                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
+	                  </tr>
 
-				
-		</table>
-		
+	                   <tr ng-repeat="status in groupingList">
+	                    <td>{{status.patient_id}}</td>
+	                    <td>{{status.beacon_id}}</td>
+	                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
+	                  </tr>
+	                </tbody>
+				</table>
+			</div>
+		</div>		
 
 	</div>
 
