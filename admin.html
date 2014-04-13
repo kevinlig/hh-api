@@ -1,0 +1,68 @@
+<!-- index.html -->
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="evergreenDoc">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Node/Angular Todo App</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="css/sb-admin.css"><!-- load bootstrap -->
+	    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
+
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+	<script src="core.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER AND GET ALL TODOS -->
+<body ng-controller="mainController">
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	     
+	      <a class="navbar-brand" href="index.html"><i class="fa fa-user-md"></i> EverDoc</a>
+	    </div>
+
+        
+        
+    </nav>
+	<div class="container">
+		 <table class="table table-hover table-striped tablesorter">
+                <thead>
+                  <tr>
+                    <th><i class="fa fa-user"></i> Patient </th>
+                  
+                    <th>Last State </th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="status in statuses">
+                    <td>{{status.patient_id}}</td>
+                    <td>{{status.beacon_id}}</td>
+                    <td>{{status.post_time}}</td>
+
+                  </tr>
+                 
+                </tbody>
+
+				
+		</table>
+		
+
+	</div>
+
+	<script src="lib/bootstrap.js"></script><!-- load angular -->
+
+</body>
+</html>
