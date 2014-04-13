@@ -185,9 +185,9 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
 
     $results = $query->fetch(PDO::FETCH_ASSOC);
 
-    $sql = "UPDATE sessions SET emergency = :emergency";
+    $sql = "INSERT INTO sessions (patient, emergency) VALUES (:patient, :emergency)";
     $update = $db->prepare($sql);
-    $update->execute(array(":emergency"=>time()));
+    $update->execute(array(":patient"=>$user, ":emergency"=>time()));
 
 
 
