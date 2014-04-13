@@ -29,6 +29,61 @@ $app->post('/status', function () use ($app, $db) {
     $insert = $db->prepare($sql);
     $insert->execute(array(":patient"=>$patient, ":beacon"=>$beacon, ":time"=>$time));
 
+
+    // send a push notification
+
+    // get device token
+    $sql = "SELECT deviceToken FROM sessions WHERE patient = :user LIMIT 1";
+    $query = $db->prepare($sql);
+    $query->execute(array(":user"=>$user));
+
+    $results = $query->fetch(PDO::FETCH_ASSOC);
+
+    // Put your device token here (without spaces):
+    $deviceToken = 'ff12c28e30e013641b26847ae81dae500fbda61633f59fc3dba5b85029c37b87';
+
+    // Put your private key's passphrase here:
+    $passphrase = "DeathPanelP@ss";
+
+    // Put your alert message here:
+    $message = 'Patient status has changed.';
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $ctx = stream_context_create();
+    stream_context_set_option($ctx, 'ssl', 'local_cert', 'hhpush.pem');
+    stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+
+    // Open a connection to the APNS server
+    $fp = stream_socket_client(
+        'ssl://gateway.sandbox.push.apple.com:2195', $err,
+        $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+
+    if (!$fp)
+        exit("Failed to connect: $err $errstr" . PHP_EOL);
+
+    
+
+    // Create the payload body
+    $body['aps'] = array(
+        'alert' => $message,
+        'sound' => 'default',
+        'update-type' => 'update'
+        );
+
+    // Encode the payload as JSON
+    $payload = json_encode($body);
+
+    // Build the binary notification
+    $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+
+    // Send it to the server
+    $result = fwrite($fp, $msg, strlen($msg));
+
+    
+    // Close the connection to the server
+    fclose($fp);
+
     $app->response->headers->set('Content-Type', 'application/json');
     echo json_encode(array("status"=>"done"));
 
@@ -45,7 +100,7 @@ $app->get('/recent/:user', function($user) use ($app, $db) {
 
 $app->get('/statuses', function () use ($app, $db) {
 
-    $sql = "SELECT * FROM status";
+    $sql = "SELECT * FROM status INNER JOIN beacon ON status.beacon_id = beacon.beacon_id";
     $statement = $db->prepare($sql);
     $statement->execute();
 
@@ -54,6 +109,88 @@ $app->get('/statuses', function () use ($app, $db) {
     $app->response->headers->set('Content-Type', 'application/json'); 
     echo json_encode($response);
 
+});
+
+
+$app->get('/sessions', function () use ($app, $db) {
+
+    $sql = "SELECT * FROM sessions";
+    $statement = $db->prepare($sql);
+    $statement->execute();
+
+    $response = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $app->response->headers->set('Content-Type', 'application/json'); 
+    echo json_encode($response);
+
+});
+
+$app->get('/emergency/:user', function($user) use ($app, $db) {
+    // get device token
+    $sql = "SELECT deviceToken FROM sessions WHERE patient = :user LIMIT 1";
+    $query = $db->prepare($sql);
+    $query->execute(array(":user"=>$user));
+
+    $results = $query->fetch(PDO::FETCH_ASSOC);
+
+    $sql = "UPDATE sessions SET emergency = :emergency WHERE patient = :patient";
+    $update = $db->prepare($sql);
+    $update->execute(array(":patient"=>$user, ":emergency"=>time()));
+
+
+
+
+    // Put your device token here (without spaces):
+    $deviceToken = 'ff12c28e30e013641b26847ae81dae500fbda61633f59fc3dba5b85029c37b87';
+
+    // Put your private key's passphrase here:
+    $passphrase = "DeathPanelP@ss";
+
+    // Put your alert message here:
+    $message = 'URGENT: The care provider needs your immediate attention.';
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    $ctx = stream_context_create();
+    stream_context_set_option($ctx, 'ssl', 'local_cert', 'hhpush.pem');
+    stream_context_set_option($ctx, 'ssl', 'passphrase', $passphrase);
+
+    // Open a connection to the APNS server
+    $fp = stream_socket_client(
+        'ssl://gateway.sandbox.push.apple.com:2195', $err,
+        $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
+
+    if (!$fp)
+        exit("Failed to connect: $err $errstr" . PHP_EOL);
+
+    
+
+    // Create the payload body
+    $body['aps'] = array(
+        'alert' => $message,
+        'sound' => 'emergency.aif',
+        'update-type' => 'emergency'
+        );
+
+    // Encode the payload as JSON
+    $payload = json_encode($body);
+
+    // Build the binary notification
+    $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+
+    // Send it to the server
+    $result = fwrite($fp, $msg, strlen($msg));
+
+    if (!$result) {
+        echo 'Message not delivered' . PHP_EOL;
+    }
+    else {
+        $app->response->headers->set('Content-Type', 'application/json'); 
+        echo json_encode(array("status"=>"success"));
+    }
+
+    // Close the connection to the server
+    fclose($fp);
 });
 
 $app->run();

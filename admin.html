@@ -36,38 +36,35 @@
         
         
     </nav>
-	<div class="container">
-		<div id="page-wrapper">
-			<div class="row">
-			 	<table class="table table-bordered table-hover table-striped tablesorter">
-	                <thead>
-	                  <tr>
-	                    <th>Patient </th>
-	                  
-	                    <th>Last State </th>
-	                    <th>Time</th>
-	                  </tr>
-	                </thead>
-	                <tbody>
+	<div id="page-wrapper">
+		 	<table class="table table-bordered table-hover table-striped tablesorter">
+                <thead>
+                  <tr>
+                    <th>Patient </th>
+                  
+                    <th>Initial Nurse Review </th>
+                    <th>Procedure Room</th>
+                    <th>Post Procedure Room</th>
+                  </tr>
+                </thead>
+                <tbody>
 
-	     
-	                  <tr ng-repeat="status in initialList" ng-click="openDetails(status.patient_id)">
-	                    <td>{{status.patient_id}}</td>
-	                    <td>{{status.beacon_id}}</td>
-	                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
-	                  </tr>
+     
+                  <!-- <tr ng-repeat="status in initialList" ng-click="openDetails(status.patient_id)">
+                    <td>{{status.patient_id}}</td>
+                    <td>{{status.name}}</td>
+                    <td>{{status.description}}</td>
+                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
+                  </tr> -->
 
-	                   <tr ng-repeat="status in groupingList">
-	                    <td>{{status.patient_id}}</td>
-	                    <td>{{status.beacon_id}}</td>
-	                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
-	                  </tr>
-	                </tbody>
-				</table>
-			</div>
-		</div>		
+                   <tr ng-repeat="(key, user) in groupingList" >
+                   		<td>{{key}}</td>
+	                   	<td ng-repeat="status in user">{{status.post_time*1000 | date: 'medium'}} </td>
+                  </tr>
+                </tbody>
+			</table>
+	</div>		
 
-	</div>
 
 	<script src="lib/bootstrap.js"></script><!-- load angular -->
 

@@ -24,7 +24,7 @@ function mainController($scope, $http, $timeout) {
 			for (var i = 0; i < data.length; i++) {
 				if (groupings[data[i].patient_id] === undefined){
 					groupings[data[i].patient_id] =[];
-					initialList.push(data[i])
+					groupings[data[i].patient_id].push(data[i]);
 
 				} else {
 					groupings[data[i].patient_id].push(data[i]);
@@ -33,8 +33,15 @@ function mainController($scope, $http, $timeout) {
 				
 
 			};
-			$scope.initialList = initialList;
+			$scope.groupingList = groupings;
 			console.log(groupings);
+			// $timeout(tick, 1000);
+			
+		});
+
+		$http({method: 'GET', url: '/sessions'})
+		.success(function(data){
+			console.log(data);
 			// $timeout(tick, 1000);
 			
 		});
