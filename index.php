@@ -90,7 +90,7 @@ $app->post('/status', function () use ($app, $db) {
 });
 
 $app->get('/recent/:user', function($user) use ($app, $db) {
-    $sql = "SELECT b.name, b.description, b.progressStep FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :user ORDER BY s.post_time DESC LIMIT 1";
+    $sql = "SELECT b.name, b.description, b.progressStep, s.post_time FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :user ORDER BY s.post_time DESC LIMIT 1";
     $query = $db->prepare($sql);
     $query->execute(array(":user"=>$user));
 
