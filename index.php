@@ -61,7 +61,7 @@ $app->get('/emergency/:user', function($user) use ($app, $db) {
     $deviceToken = 'ff12c28e30e013641b26847ae81dae500fbda61633f59fc3dba5b85029c37b87';
 
     // Put your private key's passphrase here:
-    $passphrase = 'DeathPanelP@$$';
+    $passphrase = "DeathPanelP@ss";
 
     // Put your alert message here:
     $message = 'This is a test';
