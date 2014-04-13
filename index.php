@@ -5,10 +5,10 @@ $app = new \Slim\Slim();
 
 // make DB connection
 
-	$username = "b05bccbae358e4";
-	$password = "7aa40359";
-	$server = "us-cdbr-east-05.cleardb.net";
-	$db = "heroku_74679175fcd99e5";
+$username = "b05bccbae358e4";
+$password = "7aa40359";
+$server = "us-cdbr-east-05.cleardb.net";
+$db = "heroku_74679175fcd99e5";
 
 
 
