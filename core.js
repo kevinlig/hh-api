@@ -24,7 +24,7 @@ function mainController($scope, $http, $timeout) {
 					for (var i = 0; i < data.length; i++) {
 						var currentTime = new Date();
 						var timeDiff = Math.abs(data[i].emergency- currentTime.getTime()/1000);
-						if(timeDiff < 100000000){
+						if(timeDiff < 30){
 							emergencies[data[i].patient] = true;
 						}
 					};
