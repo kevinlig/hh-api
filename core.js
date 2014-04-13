@@ -5,50 +5,60 @@ var evergreenDoc = angular.module('evergreenDoc', []);
 function mainController($scope, $http, $timeout) {
 	$scope.formData = {};
 
-	var initialList= [];
-
-	var groupings={}; 
+	
 
 	// when landing on the page, get all todos and show them
 
-	$scope.openDetails = function(patient_id){
-		console.log('someting');
-		$scope.groupingList = groupings[patient_id];
-	};
+	
 
     (function tick() {
+    	var initialList= [];
+
+	var groupings={}; 
+	$scope.selectedAlerts={};
        $http({method: 'GET', url: '/statuses'})
 		.success(function(data){
 			$scope.statuses = data.slice().reverse();
-			
+			var count = 0;
 			for (var i = 0; i < data.length; i++) {
 				if (groupings[data[i].patient_id] === undefined){
-					groupings[data[i].patient_id] =[];
-					groupings[data[i].patient_id].push(data[i]);
+					count++;
+					groupings[data[i].patient_id]=[];
+					groupings[data[i].patient_id]['beacon'] =[];
+					groupings[data[i].patient_id]['beacon'].push(data[i]);
 
 				} else {
-					groupings[data[i].patient_id].push(data[i]);
+					groupings[data[i].patient_id]['beacon'].push(data[i]);
 				}
 				
 				
 
 			};
+
+			$scope.count = count;
+			
+
 			$scope.groupingList = groupings;
 			console.log(groupings);
 			// $timeout(tick, 1000);
+			// 
+			// 
+			$http({method: 'GET', url: '/sessions'})
+				.success(function(data){
+					// $timeout(tick, 1000);
+					for (var i = 0; i < data.length; i++) {
+						var currentTime = new Date();
+						var timeDiff = Math.abs(data[i].emergency- currentTime.getTime()/1000);
+						if(timeDiff < 10){
+							groupings[data[i].patient]['emergency'] = true;
+						}
+					};
+					
+				});       
 			
 		});
 
-		$http({method: 'GET', url: '/sessions'})
-		.success(function(data){
-			console.log(data);
-			// $timeout(tick, 1000);
-			
-		});
-            
-        
     })();
-
 
 }
 

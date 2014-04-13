@@ -8,12 +8,12 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-	<title>Node/Angular Todo App</title>
+	<title>Evergreen Doctor</title>
 
 	<!-- SCROLLS -->
 	<link rel="stylesheet" href="css/bootstrap.min.css"><!-- load bootstrap -->
 	<link rel="stylesheet" href="css/sb-admin.css"><!-- load bootstrap -->
-	    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
 
 
@@ -30,10 +30,18 @@
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
 	     
-	      <a class="navbar-brand" href="index.html"><i class="fa fa-user-md"></i> EverDoc</a>
+	      <a class="navbar-brand" href="index.html"><i class="fa fa-user-md"></i> EvergreenDoc</a>
 	    </div>
 
-        
+        <ul class="nav navbar-nav navbar-right navbar-user">
+            <li>
+              <a href="#" ></i> Current Queue <span class="badge">{{count}}</span></a>
+              
+            </li>
+           
+           
+          </ul>
+           
         
     </nav>
 	<div id="page-wrapper">
@@ -50,16 +58,11 @@
                 <tbody>
 
      
-                  <!-- <tr ng-repeat="status in initialList" ng-click="openDetails(status.patient_id)">
-                    <td>{{status.patient_id}}</td>
-                    <td>{{status.name}}</td>
-                    <td>{{status.description}}</td>
-                    <td>{{ status.post_time*1000  | date:'medium'}}</td>
-                  </tr> -->
 
-                   <tr ng-repeat="(key, user) in groupingList" >
-                   		<td>{{key}}</td>
-	                   	<td ng-repeat="status in user">{{status.post_time*1000 | date: 'medium'}} </td>
+
+                   <tr ng-repeat="(key, user) in groupingList" ng-class="{danger: user.emergency == true}" >
+                   		<td>{{selectedAlerts.key}}{{key}}</td>
+	                   	<td ng-repeat="status in user.beacon">{{status.post_time*1000 | date: 'medium'}} </td>
                   </tr>
                 </tbody>
 			</table>

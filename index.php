@@ -19,6 +19,10 @@ try {
     echo 'ERROR: ' . $e->getMessage();
 }
 
+$app->get('/login', function() use ($app){
+    echo file_get_contents("login.html");
+    error_log($_POST);
+});
 
 $app->post('/status', function () use ($app, $db) {
     $beacon = $_POST['beacon'];
