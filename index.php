@@ -21,7 +21,43 @@ try {
 
 $app->get('/login', function() use ($app){
     echo file_get_contents("login.html");
-    error_log($_POST);
+});
+$app->post('/login', function() use ($app){
+    $email = $_POST['email'];
+    $fields = array(
+                        'username' => $_POST['email'],
+                        'password' => $_POST['password'],
+                        'returnProfile'=>true,
+                        'responseFilters'=>'PROFILE,SETTINGS,APPS,CONNECTIONS'
+
+                );
+
+
+    $ch = curl_init(); 
+
+    // set url 
+    curl_setopt($ch, CURLOPT_URL, "https://www.sirqul.com/api/3.05/account/get"); 
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Application-Key: 66750de6c373ccea7f0a009239e6df32',
+        'Application-Rest-Key: 4ed060fd987153ca88db1419c103bfc9'
+        ));
+    curl_setopt($ch,CURLOPT_POST, count($fields));
+    curl_setopt($ch,CURLOPT_POSTFIELDS, $fields);
+
+    //return the transfer as a string 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+    // $output contains the output string 
+    $output = curl_exec($ch); 
+    $response = json_decode($output);
+
+    if($response->valid = true){
+        echo file_get_contents("admin.html");
+    }
+
+    // close curl resource to free up system resources 
+    curl_close($ch);      
+
+
 });
 
 $app->post('/status', function () use ($app, $db) {
@@ -94,7 +130,7 @@ $app->post('/status', function () use ($app, $db) {
 });
 
 $app->get('/recent/:user', function($user) use ($app, $db) {
-    $sql = "SELECT * FROM status WHERE patient_id = :user ORDER BY post_time DESC LIMIT 1";
+    $sql = "SELECT b.name, b.description, b.progressStep, s.post_time FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :user ORDER BY s.post_time DESC LIMIT 1";
     $query = $db->prepare($sql);
     $query->execute(array(":user"=>$user));
 
