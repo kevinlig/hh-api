@@ -35,7 +35,7 @@ $app->post('/status', function () use ($app, $db) {
 });
 
 $app->get('/recent/:user', function($user) use ($app, $db) {
-    $sql = "SELECT * FROM status WHERE patient = :user ORDER BY post_time DESC LIMIT 1";
+    $sql = "SELECT * FROM status WHERE patient_id = :user ORDER BY post_time DESC LIMIT 1";
     $query = $db->prepare($sql);
     $query->execute(array(":user"=>$user));
 
