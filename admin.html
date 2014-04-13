@@ -48,7 +48,6 @@
 		 	<table class="table table-bordered table-hover table-striped tablesorter">
                 <thead>
                   <tr>
-                    <th>Patient </th>
                   
                     <th>Initial Nurse Review </th>
                     <th>Procedure Room</th>
@@ -56,13 +55,13 @@
                   </tr>
                 </thead>
                 <tbody>
-
-     
-
-
-                   <tr ng-repeat="(key, user) in groupingList" ng-class="{danger: user.emergency == true}" >
-                   		<td>{{selectedAlerts.key}}{{key}}</td>
-	                   	<td ng-repeat="status in user.beacon">{{status.post_time*1000 | date: 'medium'}} </td>
+                   <tr  >
+                   		<td><li class="items" ng-repeat="(key, patient) in nurse" ng-class="{emergency: patient.emergency == true}">
+                   		<h2>{{patient.patient_id}}</h2></li></td>
+	                  <td><li class="items" ng-repeat="(key, patient) in operating" ng-class="{emergency: patient.emergency == true}">
+                   		<h2>{{patient.patient_id}}</h2></li></td>
+                   		 <td><li class="items" ng-repeat="(key, patient) in recovery" ng-class="{emergency: patient.emergency == true}">
+                   		<h2>{{patient.patient_id}}</h2></li></td>
                   </tr>
                 </tbody>
 			</table>

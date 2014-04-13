@@ -140,15 +140,26 @@ $app->get('/recent/:user', function($user) use ($app, $db) {
 
 $app->get('/statuses', function () use ($app, $db) {
 
-    $sql = "SELECT * FROM status INNER JOIN beacon ON status.beacon_id = beacon.beacon_id";
+    $sql = "SELECT DISTINCT patient_id FROM status";
     $statement = $db->prepare($sql);
     $statement->execute();
 
-    $response = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+
+    $response = array();
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        
+        $sql = "SELECT s.patient_id, b.beacon_id, b.description, b.name FROM status s INNER JOIN beacon b ON s.beacon_id = b.beacon_id WHERE s.patient_id = :patient ORDER BY s.id DESC LIMIT 1";
+        $query = $db->prepare($sql);
+        $query->execute(array(":patient"=>$row['patient_id']));
+
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        array_push($response,$result);
+    }
 
     $app->response->headers->set('Content-Type', 'application/json'); 
     echo json_encode($response);
-
 });
 
 
@@ -162,6 +173,7 @@ $app->get('/sessions', function () use ($app, $db) {
 
     $app->response->headers->set('Content-Type', 'application/json'); 
     echo json_encode($response);
+
 
 });
 
